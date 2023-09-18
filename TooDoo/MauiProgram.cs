@@ -1,5 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using TooDoo.Data;
+using TooDoo.Services;
+using TooDooMBH.Common.Interfaces;
+using TooDooMBH.Common.Services;
 
 namespace TooDoo;
 
@@ -21,16 +24,24 @@ public static class MauiProgram
         builder.Services.AddBlazorWebViewDeveloperTools();
         builder.Logging.AddDebug();
 #endif
-        builder.Services.AddMyServices();
-
         builder.Services.AddSingleton<WeatherForecastService>();
+
+        // 增加 BootstrapBlazor 组件服务
+        builder.Services.AddBootstrapBlazor();
+        // 增加 验证 服务
+        builder.Services.AddMyServices();
 
         return builder.Build();
     }
 
     public static IServiceCollection AddMyServices(this IServiceCollection services)
     {
-        services.AddBootstrapBlazor();
+        services.AddSingleton<IAlertService , AlertService>()
+                .AddSingleton<IStorageService , StorageService>();
+        services.AddTransient<AuthService>();
+        //services.AddScoped<IResultDialog>();
+        //services.AddTransient<DialogService>();
+        //services.AddTransient<ToastService>();
         return services;
     }
 

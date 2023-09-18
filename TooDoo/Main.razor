@@ -1,4 +1,7 @@
-﻿<BootstrapBlazorRoot>
+﻿@inject NavigationManager NavigationManager
+@inject AuthService AuthService
+
+<BootstrapBlazorRoot>
     <Router AppAssembly="@typeof(Main).Assembly">
         <Found Context="routeData">
             <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
@@ -12,3 +15,36 @@
     </Router>
 </BootstrapBlazorRoot>
 
+@code {
+    protected async override Task OnInitializedAsync()
+    {
+        // var name = await SecureStorage.Default.GetAsync(AppConstants.StorageKeys.Username);
+        // if(string.IsNullOrWhiteSpace(name))
+        // {
+        //     int maxTry = 3;
+        //     do
+        //     {
+        //         name = await App.Current.MainPage.DisplayPromptAsync("Welcome" , "Please enter your name." ,
+        //                                                         placeholder: AppConstants.StorageKeys.Username ,
+        //                                                         maxLength: 18 ,
+        //                                                         keyboard: Keyboard.Text);
+        //     } while(string.IsNullOrWhiteSpace(name) && (--maxTry) > 0);
+
+        //     if(string.IsNullOrWhiteSpace(name))
+        //     {
+        //         await App.Current.MainPage.DisplayAlert("Error" , "Your name is required for the coninuing using." , "Exit");
+        //         App.Current.Quit();
+        //         return;
+        //     }
+        //     // We have user name so that we can continue that.
+        //     await SecureStorage.SetAsync(AppConstants.StorageKeys.Username , name);
+        // }
+
+        var name = await AuthService.GetUserName();
+
+        if(string.IsNullOrWhiteSpace(name)) { return; }
+
+        NavigationManager.NavigateTo("/home");
+        await base.OnInitializedAsync();
+    }
+}
