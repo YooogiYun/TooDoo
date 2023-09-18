@@ -9,13 +9,13 @@ public class AlertService : IAlertService
     {
         _page = App.Current.MainPage;
     }
-    public async Task AlertAsync(string msg , string title = "Alert" , string buttonName = "OK")
+    public async Task AlertAsync(string title , string msg , string buttonName = "OK")
     {
-        await _page.DisplayAlert(msg , title , buttonName);
+        await _page.DisplayAlert(title , msg , buttonName);
     }
 
-    public async Task<string?> PromptAsync(string msg , string title)
+    public async Task<string?> PromptAsync(string title , string msg)
     {
-        return await _page.DisplayPromptAsync(msg , title);
+        return await _page.DisplayPromptAsync(title , msg);
     }
 }

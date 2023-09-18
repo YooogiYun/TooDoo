@@ -1,4 +1,5 @@
 ﻿@inject NavigationManager NavigationManager
+@inject IJSRuntime JsRuntime
 @inject AuthService AuthService
 
 <Router AppAssembly="@typeof(App).Assembly">
@@ -35,9 +36,13 @@
         //     await JsRuntime.InvokeVoidAsync("window.localStorage.setItem" , AppConstants.StorageKeys.Username , name);
         // }
 
+        await AuthService.RemoveUsername();
+
         var name = await AuthService.GetUserName();
 
-        if(string.IsNullOrWhiteSpace(name)) { return; }
+        if(string.IsNullOrWhiteSpace(name)) {
+            JsRuntime.InvokeVoidAsync("location.reload");
+            return; }
 
         NavigationManager.NavigateTo("/home");
 

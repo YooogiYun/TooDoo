@@ -2,9 +2,8 @@
 
 public interface IAlertService
 {
-    Task<string?> PromptAsync(string msg , string title);
-    Task AlertAsync(string msg , string title = "Alert" , string buttonName = "OK");
-
+    Task<string?> PromptAsync(string title , string msg);
+    Task AlertAsync(string title , string msg , string buttonName = "OK");
 }
 
 

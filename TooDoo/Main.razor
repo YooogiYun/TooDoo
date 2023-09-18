@@ -40,11 +40,17 @@
         //     await SecureStorage.SetAsync(AppConstants.StorageKeys.Username , name);
         // }
 
+        await AuthService.RemoveUsername();
+
         var name = await AuthService.GetUserName();
 
-        if(string.IsNullOrWhiteSpace(name)) { return; }
+        if(string.IsNullOrWhiteSpace(name)) {
+            App.Current.Quit();
+            return; 
+        }
 
         NavigationManager.NavigateTo("/home");
+
         await base.OnInitializedAsync();
     }
 }

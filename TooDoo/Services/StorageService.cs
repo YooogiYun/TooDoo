@@ -20,11 +20,18 @@ public class StorageService : IStorageService
         await _secureStorage.SetAsync(key , value);
     }
 
-    public async Task DeleteAsync(string key)
+    public async Task RemoveAsync(string key)
     {
         await Task.Run(( ) =>
         {
             _secureStorage.Remove(key);
+        });
+    }
+    public async Task RemoveAllAsync( )
+    {
+        await Task.Run(( ) =>
+        {
+            _secureStorage.RemoveAll();
         });
     }
 }

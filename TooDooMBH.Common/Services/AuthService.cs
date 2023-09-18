@@ -35,5 +35,10 @@ public class AuthService
         }
         return name;
     }
+
+    public async Task RemoveUsername( )
+    {
+        await _storageService.RemoveAsync(AppConstants.StorageKeys.Username);
+    }
 }
 
