@@ -14,11 +14,11 @@ public class AlertService : IAlertService
     }
     public async Task AlertAsync(string title , string msg , string buttonName = "Useless Param")
     {
-        await _jsRuntime.InvokeVoidAsync(JSRuntimeFuncs.alertFunc , $"{title}\n{msg}");
+        await this._jsRuntime.InvokeVoidAsync(JSRuntimeFuncs.alertFunc , $"{title}\n{msg}");
     }
 
     public async Task<string?> PromptAsync(string title , string msg)
     {
-        return await _jsRuntime.InvokeAsync<string?>(JSRuntimeFuncs.promptFunc , $"{title}\n{msg}");
+        return await this._jsRuntime.InvokeAsync<string?>(JSRuntimeFuncs.promptFunc , $"{title}\n{msg}");
     }
 }

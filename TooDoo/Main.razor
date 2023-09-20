@@ -1,23 +1,30 @@
-﻿@inject NavigationManager NavigationManager
+﻿@* MAUI Blazor Hybird *@
+
+@inject NavigationManager NavigationManager
 @inject AuthService AuthService
 
 <BootstrapBlazorRoot>
-    <Router AppAssembly="@typeof(Main).Assembly">
-        <Found Context="routeData">
-            <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
-            <FocusOnNavigate RouteData="@routeData" Selector="h1" />
-        </Found>
-        <NotFound>
-            <LayoutView Layout="@typeof(MainLayout)">
-                <p role="alert">Sorry, there's nothing at this address.</p>
-            </LayoutView>
-        </NotFound>
-    </Router>
+    <CascadingValue Name="@AppConstants.StorageKeys.Username" Value="@_name">
+        <Router AppAssembly="@typeof(Main).Assembly" AdditionalAssemblies="new[]{ typeof(HomePage).Assembly }">
+            <Found Context="routeData">
+                <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+                <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+            </Found>
+            <NotFound>
+                <LayoutView Layout="@typeof(MainLayout)">
+                    <p role="alert">Sorry, there's nothing at this address.</p>
+                </LayoutView>
+            </NotFound>
+        </Router>
+    </CascadingValue>
 </BootstrapBlazorRoot>
 
 @code {
-    protected async override Task OnInitializedAsync()
+    private string _name = string.Empty;
+
+    protected async override Task OnInitializedAsync( )
     {
+        #region Obsolete
         // var name = await SecureStorage.Default.GetAsync(AppConstants.StorageKeys.Username);
         // if(string.IsNullOrWhiteSpace(name))
         // {
@@ -39,15 +46,18 @@
         //     // We have user name so that we can continue that.
         //     await SecureStorage.SetAsync(AppConstants.StorageKeys.Username , name);
         // }
-
+        #endregion
+        
         await AuthService.RemoveUsername();
 
         var name = await AuthService.GetUserName();
 
-        if(string.IsNullOrWhiteSpace(name)) {
+        if(string.IsNullOrWhiteSpace(name))
+        {
             App.Current.Quit();
-            return; 
+            return;
         }
+        _name = name;
 
         NavigationManager.NavigateTo("/home");
 

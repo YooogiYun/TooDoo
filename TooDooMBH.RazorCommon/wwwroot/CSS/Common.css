@@ -1,0 +1,28 @@
+﻿:root {
+    --color-main: #45496A;
+    --color-main-light: #7D8BAE;
+    --color-main-accent: #E5857B;
+    --color-main-accent-light: #F1B2B2;
+    --color-main-accent-light-plus: #E8CCC7;
+}
+
+
+@font-face {
+    font-family: 'JetBrains-light';
+    src: url('../Fonts/JetBrains Mono Light Italic Nerd Font Complete Mono.ttf') format('truetype');
+    font-family: 'JetBrains-Medium';
+    src: url('../Fonts/JetBrains Mono Medium Italic Nerd Font Complete Mono.ttf') format('truetype');
+}
+
+/*@font-face {
+    font-family: 'JetBrains-Medium';
+    src: url('../Fonts/JetBrains Mono Medium Italic Nerd Font Complete Mono.ttf') format('truetype');
+}*/
+
+html, body {
+    font-family: JetBrains-light,Arial, Helvetica, sans-serif;
+}
+
+body {
+    background: var(--color-main-accent-light-plus)
+}

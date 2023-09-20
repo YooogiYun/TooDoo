@@ -1,0 +1,12 @@
+﻿@* Razor Common Components *@
+
+@page "/home"
+
+<h1>Welcome @UserName</h1>
+
+<h3>HomePage from RazorCommon.</h3>
+
+@code {
+    [CascadingParameter(Name = AppConstants.StorageKeys.Username)]
+    public string UserName { get; set; } = string.Empty;
+}
