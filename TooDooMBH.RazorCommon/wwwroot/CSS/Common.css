@@ -10,8 +10,8 @@
 @font-face {
     font-family: 'JetBrains-light';
     src: url('../Fonts/JetBrains Mono Light Italic Nerd Font Complete Mono.ttf') format('truetype');
-    font-family: 'JetBrains-Medium';
-    src: url('../Fonts/JetBrains Mono Medium Italic Nerd Font Complete Mono.ttf') format('truetype');
+    /*    font-family: 'JetBrains-Medium';
+    src: url('../Fonts/JetBrains Mono Medium Italic Nerd Font Complete Mono.ttf') format('truetype');*/
 }
 
 /*@font-face {
@@ -26,3 +26,60 @@ html, body {
 body {
     background: var(--color-main-accent-light-plus)
 }
+
+
+.empty-notes-box-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+}
+
+.box {
+    background-color: var(--color-main-light);
+    box-shadow: 0 0 5px white;
+    padding: 8px 16px;
+    min-height: 250px;
+    overflow-y: auto;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: all ease-in 0.3s;
+}
+
+    .box:hover {
+        box-shadow: 0 0 10px var(--color-main-accent-light-plus);
+        border-radius: 0;
+    }
+
+.empty-notes-box-wrapper .box {
+    --height-default: 250px;
+    height: var(--height-default);
+    width: var(--height-default);
+}
+
+.add-note-btn {
+    cursor: pointer;
+    color: var(--color-main);
+    transition: all ease-in 0.3s;
+}
+
+    .add-note-btn .icon{
+        font-size:55px;
+        font-weight:bold;
+        padding:0;
+        opacity:0.6;
+    }
+
+    .add-note-btn .label {
+        font-size: 25px;
+        opacity: 0.6;
+    }
+
+    .add-note-btn:hover > .label, .add-note-btn:hover > .icon {
+        opacity: 0.6;
+        color: var(--color-main-accent-light-plus);
+    }

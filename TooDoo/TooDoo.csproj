@@ -51,6 +51,7 @@
     <PackageReference Include="Bogus" Version="34.0.2" />
     <PackageReference Include="BootstrapBlazor" Version="7.10.7" />
     <PackageReference Include="BootstrapBlazor.FontAwesome" Version="7.5.0" />
+    <PackageReference Include="CommunityToolkit.Maui" Version="5.3.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1" />
   </ItemGroup>
