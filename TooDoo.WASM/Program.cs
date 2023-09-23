@@ -17,8 +17,10 @@ internal class Program
 
         // My Services...
         builder.Services.AddSingleton<IAlertService , AlertService>()
-                        .AddSingleton<IStorageService , StorageService>();
+                        .AddSingleton<IStorageService , StorageService>()
+                        .AddSingleton<IPlatformService , PlatformService>();
         builder.Services.AddTransient<AuthService>();
+        builder.Services.AddSingleton<NotesService>();
 
         await builder.Build().RunAsync();
     }

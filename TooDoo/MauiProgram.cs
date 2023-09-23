@@ -31,22 +31,25 @@ public static class MauiProgram
 
         // 增加 BootstrapBlazor 组件服务
         builder.Services.AddBootstrapBlazor();
-        // 增加 验证 服务
-        builder.Services.AddMyServices();
+
+
+        // 增加 个人 服务
+        builder.AddMyServices();
 
         return builder.Build();
     }
 
-    public static IServiceCollection AddMyServices(this IServiceCollection services)
+    public static MauiAppBuilder AddMyServices(this MauiAppBuilder builder)
     {
-        services.AddSingleton<IAlertService , AlertService>()
-                .AddSingleton<IStorageService , StorageService>();
-        services.AddTransient<AuthService>();
-        services.AddSingleton<NotesService>();
+        builder.Services.AddSingleton<IAlertService , AlertService>()
+                        .AddSingleton<IStorageService , StorageService>()
+                        .AddSingleton<IPlatformService , PlatformService>();
+        builder.Services.AddTransient<AuthService>();
+        builder.Services.AddSingleton<NotesService>();
         //services.AddScoped<IResultDialog>();
         //services.AddTransient<DialogService>();
         //services.AddTransient<ToastService>();
-        return services;
+        return builder;
     }
 
 

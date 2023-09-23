@@ -1,0 +1,44 @@
+﻿@* Razor components *@
+
+
+
+@inject IPlatformService PlatformService
+
+
+@if(PlatformService.IsBrower)
+{
+    <div class="card">
+        @* header *@
+        <div class="card-header">
+            <h5 class="m-0">@(IsNewNode ? "Add a" : "Edit") note</h5>
+        </div>
+        @* body *@
+        <div class="card-body">
+            @ChildContent
+        </div>
+        @* footer *@
+        <div class="card-footer">
+            @FooterContent
+        </div>
+    </div>
+}
+else
+{
+    <div class="mobile-save-note-form-card">
+        @ChildContent
+        @FooterContent
+    </div>
+}
+
+
+
+@code {
+    [Parameter]
+    public bool IsNewNode { get; set; }
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public RenderFragment FooterContent { get; set; }
+}

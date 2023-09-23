@@ -28,6 +28,39 @@ body {
 }
 
 
+.bg-main {
+    background-color: var(--color-main) !important;
+}
+
+.bg-main-light {
+    background-color: var(--color-main-light) !important;
+}
+
+.bg-main-accent {
+    background-color: var(--color-main-accent) !important;
+}
+
+.bg-main-accent-light {
+    background-color: var(--color-main-accent-light) !important;
+}
+
+.bg-main-accent-light-plus {
+    background-color: var(--color-main-accent-light-plus) !important;
+}
+
+.text-main-accent{
+    color:var(--color-main-accent) !important;
+}
+
+.text-main-accent-light{
+    color:var(--color-main-accent-light) !important;
+}
+
+.text-main-accent-light-plus{
+    color:var(--color-main-accent-light-plus) !important;
+}
+
+
 .empty-notes-box-wrapper {
     display: flex;
     justify-content: center;
@@ -67,11 +100,11 @@ body {
     transition: all ease-in 0.3s;
 }
 
-    .add-note-btn .icon{
-        font-size:55px;
-        font-weight:bold;
-        padding:0;
-        opacity:0.6;
+    .add-note-btn .icon {
+        font-size: 55px;
+        font-weight: bold;
+        padding: 0;
+        opacity: 0.6;
     }
 
     .add-note-btn .label {
@@ -82,4 +115,16 @@ body {
     .add-note-btn:hover > .label, .add-note-btn:hover > .icon {
         opacity: 0.6;
         color: var(--color-main-accent-light-plus);
+    }
+
+
+    .btn-xs{
+        padding:.2rem .25rem;
+        font-size:.6rem;
+        border-radius: .15rem;
+    }
+
+    .col-gap-y{
+        margin-top:var(--bs-gutter-x);
+
     }

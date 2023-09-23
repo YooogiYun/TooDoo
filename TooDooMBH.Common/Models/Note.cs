@@ -10,14 +10,14 @@ public class Note
     [Required, MaxLength(75)]
     public string Title { get; set; }
 
+    [MaxLength(250)]
     public string Content { get; set; }
 
-    [MaxLength(250)]
     public string Description { get; set; }
 
     public List<string> Tags { get; set; }
     public DateTime CreatedOnTime { get; set; } = DateTime.Now;
-    public DateTime ModifiedOnTime { get; set; }
+    public DateTime? ModifiedOnTime { get; set; }
     public string Url { get; set; }
 
     public bool UpdateFrom(Note note)

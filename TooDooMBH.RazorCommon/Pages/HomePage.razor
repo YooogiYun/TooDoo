@@ -2,42 +2,189 @@
 
 @page "/home"
 
+@inject NotesService NotesService
+@inject IAlertService AlertService
+@inject IPlatformService PlatformService
 
-<div class="maui-navbar text-white">
-    <div class="">
-        <h5 class="m-0">Welcome @UserName</h5>
+
+@if(!PlatformService.IsBrower)
+{
+    <div class="maui-navbar text-white">
+        <div class="">
+            <h5 class="m-0">Welcome @UserName</h5>
+        </div>
+        <NavLink href="/save" Class="left-plus-btn btn btn-default text-white m-0" title="Add">+</NavLink>
     </div>
-    <NavLink href="/save" Class="left-plus-btn btn btn-default text-white m-0" title="Add">+</NavLink>
-</div>
+}
 
-<div/>
+
+<div />
 <div class="page">
     <div class="container-fluid">
         <div class="col-11 mx-auto">
             <div class="mt-3 d-flex text-white justify-content-between align-items-end">
-                <h2>All Notes</h2>
+
+                <h2 class="@(PlatformService.IsBrower ? "text-black" : "text-white")">All Notes</h2>
+
                 <div class="filter-btns">
-                    <button type="button" class="btn btn-default">
-                        <i class="bx bx-sm bx-grid-alt"></i>
-                    </button>
-                    <button type="button" class="btn btn-default">
-                        <i class="bx bx-sm bx-menu"></i>
-                    </button>
+
+                    @if(!PlatformService.IsBrower)
+                    {
+                        <button type="button" class="btn btn-default" @onclick="@(()=>ToggleLayout("col-6"))">
+                            <i class="bx bx-sm bx-grid-alt" style="@(mainColClass == "col-6"? "color:var(--color-main)" : "color:grey")"></i>
+                        </button>
+
+                        <button type="button" class="btn btn-default" @onclick="@(()=>ToggleLayout("col-12"))">
+                            <i class="bx bx-sm bx-menu" style="@(mainColClass == "col-12"? "color:var(--color-main)" : "color:grey")"></i>
+                        </button>
+                    }
+                    else
+                    {
+                        <h5 class="m-0 text-black">Welcome @UserName</h5>
+                    }
+
                 </div>
+
             </div>
         </div>
         <hr class="text-white mb-0" />
     </div>
 
-    <div class="empty-notes-box-wrapper">
-        <NavLink href="/save" Class="text-center box add-note-btn text-decoration-none d-flex justify-content-center align-items-center flex-column" title="Add">
-            <span class="icon">+</span>    
-            <label class="label">Add a note</label>    
-        </NavLink>
-    </div>
+    @if(_isFetching)
+    {
+        <Loading LoadingMessage="Fetching Notes..." />
+    }
+    else
+    {
+        if(!_notes.Any())
+        {
+            <div class="empty-notes-box-wrapper">
+                <NavLink href="/save" Class="text-center box add-note-btn text-decoration-none d-flex justify-content-center align-items-center flex-column" title="Add">
+                    <span class="icon">+</span>
+                    <label class="label">Add a note</label>
+                </NavLink>
+            </div>
+        }
+        else
+        {
+            <div class="container-fluid">
+                <div class="row">
+                    @foreach(var note in _notes)
+                    {
+                        var editLink = $"/save/{note.Id}";
+                        <div class="@mainColClass col-sm-6 col-md-4 col-gap-y">
+
+                            <div class="box">
+                                <div>
+                                    <h6 class="m-0 text-truncate">@note.Title</h6>
+                                    <hr />
+                                </div>
+
+                                <div class="flex-grow-1">
+                                    <div class="note-content-wrapper">
+                                        @if(!string.IsNullOrWhiteSpace(note.Content))
+                                        {
+                                            <p style="font-size:14px">@note.Content</p>
+                                        }
+                                        else
+                                        {
+                                            <NavLink href="@editLink"
+                                                     class="text-center text-decoration-none d-flex add-note-btn justify-content-center align-items-center  flex-column">
+                                                <span class="icon fs-4">+</span>
+                                                <label class="label fs-6">Add content</label>
+                                            </NavLink>
+                                        }
+                                    </div>
+                                </div>
+
+
+                                <div class="actions">
+                                    <hr />
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small style="font-size:12px;">
+                                            <i class="bx bx-time-five"></i>
+                                            <small>@(note.ModifiedOnTime.HasValue ? note.ModifiedOnTime.Value.ToString(AppConstants.DateTimeFormat) : note.CreatedOnTime.ToString(AppConstants.DateTimeFormat))</small>
+                                        </small>
+                                        <div>
+                                           @if(PlatformService.IsBrower)
+                                            {
+                                                <button type="button" class="btn btn-danger btn-sm">
+                                                    <i class="bx bx-trash"></i>
+                                                </button>
+                                                <NavLink href="@editLink" class="btn btn-primary btn-sm" >
+                                                    <i class="bx bx-edit"></i>
+                                                </NavLink>
+                                            }
+                                            else
+                                            {
+                                                <button type="button" class="btn btn-xs">
+                                                    <i class="bx bx-xs bx-dots-vertical-rounded"></i>
+                                                </button>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+
+                        </div>
+                    }
+                    <div class="@mainColClass col-sm-6 col-md-4 col-gap-y">
+                        <NavLink href="/save" Class="text-center box add-note-btn text-decoration-none d-flex justify-content-center align-items-center flex-column" title="Add">
+                            <span class="icon">+</span>
+                            <label class="label">Add a note</label>
+                        </NavLink>
+                    </div>
+                </div>
+                <div class="bottom-space">
+                    <hr />
+                    <div class="d-flex align-items-center justify-content-center mb-2">
+                        <span>The end of notes.</span>
+                    </div>
+                </div>
+            </div>
+
+        }
+
+    }
 </div>
 
 @code {
     [CascadingParameter(Name = AppConstants.StorageKeys.Username)]
     public string UserName { get; set; } = string.Empty;
+
+    private bool _isFetching = true;
+    private IEnumerable<Note> _notes = Enumerable.Empty<Note>();
+
+    private string mainColClass = "col-6";
+
+    protected override async Task OnInitializedAsync( )
+    {
+        await base.OnInitializedAsync();
+        try
+        {
+            await Task.Delay(500);
+            _notes = await NotesService.GetAllNoteAsync();
+        }
+        catch(Exception e)
+        {
+
+            await AlertService.AlertAsync("Error" , $"Error in fetching note. Please try again.\nError Messsage: {e.Message}");
+            // throw;
+        }
+        finally
+        {
+            _isFetching = false;
+        }
+    }
+
+    private void ToggleLayout(string btnClass)
+    {
+        if(mainColClass != btnClass)
+        {
+            mainColClass = btnClass;
+        }
+    }
 }

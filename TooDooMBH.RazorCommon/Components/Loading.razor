@@ -1,0 +1,13 @@
+﻿@* Razor Components *@
+
+<div class="d-flex justify-content-center align-items-center mt-5">
+    <div class="d-flex flex-column justify-content-center align-items-center shadow p-3 rounded bg-main text-white-50">
+        <div class="spinner-grow text-dark mt-3 bg-main-accent"></div>
+        <p class="mt-3 mb-2">@LoadingMessage</p>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string LoadingMessage { get; set; } = "Loading...";
+}

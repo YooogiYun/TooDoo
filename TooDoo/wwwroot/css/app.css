@@ -6,8 +6,8 @@
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }*/
 
-:root{
-    --navbar-height:55px;
+:root {
+    --navbar-height: 55px;
 }
 
 .maui-navbar {
@@ -58,15 +58,17 @@ a, .btn-link {
 }
 
 .valid.modified:not([type=checkbox]) {
-    outline: 1px solid #26b050;
+    /*outline: 1px solid #26b050;*/
+    border-color: #26b050;
 }
 
 .invalid {
-    outline: 1px solid red;
+    /*outline: 1px solid red;*/
+    border-color: red;
 }
 
 .validation-message {
-    color: red;
+    color: ghostwhite;
 }
 
 #blazor-error-ui {
