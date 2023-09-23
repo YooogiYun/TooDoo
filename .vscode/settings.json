@@ -1,0 +1,6 @@
+{
+    "html-to-css-autocompletion.getSelectorsFromFileTypes": [
+        "razor"
+    ],
+    "html-to-css-autocompletion.autocompletionFilesScope": "workspace"
+}

@@ -7,7 +7,7 @@
 @inject IPlatformService PlatformService
 
 
-@if(!PlatformService.IsBrower)
+@if (!PlatformService.IsBrower)
 {
     <div class="maui-navbar text-white">
         <div class="">
@@ -28,14 +28,16 @@
 
                 <div class="filter-btns">
 
-                    @if(!PlatformService.IsBrower)
+                    @if (!PlatformService.IsBrower)
                     {
                         <button type="button" class="btn btn-default" @onclick="@(()=>ToggleLayout("col-6"))">
-                            <i class="bx bx-sm bx-grid-alt" style="@(mainColClass == "col-6"? "color:var(--color-main)" : "color:grey")"></i>
+                            <i class="bx bx-sm bx-grid-alt"
+                                style="@(mainColClass == "col-6"? "color:var(--color-main)" : "color:grey")"></i>
                         </button>
 
                         <button type="button" class="btn btn-default" @onclick="@(()=>ToggleLayout("col-12"))">
-                            <i class="bx bx-sm bx-menu" style="@(mainColClass == "col-12"? "color:var(--color-main)" : "color:grey")"></i>
+                            <i class="bx bx-sm bx-menu"
+                                style="@(mainColClass == "col-12"? "color:var(--color-main)" : "color:grey")"></i>
                         </button>
                     }
                     else
@@ -50,16 +52,18 @@
         <hr class="text-white mb-0" />
     </div>
 
-    @if(_isFetching)
+    @if (_isFetching)
     {
         <Loading LoadingMessage="Fetching Notes..." />
     }
     else
     {
-        if(!_notes.Any())
+        if (!_notes.Any())
         {
             <div class="empty-notes-box-wrapper">
-                <NavLink href="/save" Class="text-center box add-note-btn text-decoration-none d-flex justify-content-center align-items-center flex-column" title="Add">
+                <NavLink href="/save"
+                    Class="text-center box add-note-btn text-decoration-none d-flex justify-content-center align-items-center flex-column"
+                    title="Add">
                     <span class="icon">+</span>
                     <label class="label">Add a note</label>
                 </NavLink>
@@ -69,7 +73,7 @@
         {
             <div class="container-fluid">
                 <div class="row">
-                    @foreach(var note in _notes)
+                    @foreach (var note in _notes)
                     {
                         var editLink = $"/save/{note.Id}";
                         <div class="@mainColClass col-sm-6 col-md-4 col-gap-y">
@@ -82,14 +86,14 @@
 
                                 <div class="flex-grow-1">
                                     <div class="note-content-wrapper">
-                                        @if(!string.IsNullOrWhiteSpace(note.Content))
+                                        @if (!string.IsNullOrWhiteSpace(note.Content))
                                         {
                                             <p style="font-size:14px">@note.Content</p>
                                         }
                                         else
                                         {
                                             <NavLink href="@editLink"
-                                                     class="text-center text-decoration-none d-flex add-note-btn justify-content-center align-items-center  flex-column">
+                                                class="text-center text-decoration-none d-flex add-note-btn justify-content-center align-items-center  flex-column">
                                                 <span class="icon fs-4">+</span>
                                                 <label class="label fs-6">Add content</label>
                                             </NavLink>
@@ -103,15 +107,17 @@
                                     <div class="d-flex justify-content-between align-items-center">
                                         <small style="font-size:12px;">
                                             <i class="bx bx-time-five"></i>
-                                            <small>@(note.ModifiedOnTime.HasValue ? note.ModifiedOnTime.Value.ToString(AppConstants.DateTimeFormat) : note.CreatedOnTime.ToString(AppConstants.DateTimeFormat))</small>
+                                            <small>@(note.ModifiedOnTime.HasValue ?
+                                                 note.ModifiedOnTime.Value.ToString(AppConstants.DateTimeFormat) :
+                                                 note.CreatedOnTime.ToString(AppConstants.DateTimeFormat))</small>
                                         </small>
                                         <div>
-                                           @if(PlatformService.IsBrower)
+                                            @if (PlatformService.IsBrower)
                                             {
                                                 <button type="button" class="btn btn-danger btn-sm">
                                                     <i class="bx bx-trash"></i>
                                                 </button>
-                                                <NavLink href="@editLink" class="btn btn-primary btn-sm" >
+                                                <NavLink href="@editLink" class="btn btn-primary btn-sm">
                                                     <i class="bx bx-edit"></i>
                                                 </NavLink>
                                             }
@@ -132,7 +138,9 @@
                         </div>
                     }
                     <div class="@mainColClass col-sm-6 col-md-4 col-gap-y">
-                        <NavLink href="/save" Class="text-center box add-note-btn text-decoration-none d-flex justify-content-center align-items-center flex-column" title="Add">
+                        <NavLink href="/save"
+                            Class="text-center box add-note-btn text-decoration-none d-flex justify-content-center align-items-center flex-column"
+                            title="Add">
                             <span class="icon">+</span>
                             <label class="label">Add a note</label>
                         </NavLink>
@@ -160,7 +168,7 @@
 
     private string mainColClass = "col-6";
 
-    protected override async Task OnInitializedAsync( )
+    protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
         try
@@ -168,10 +176,10 @@
             await Task.Delay(500);
             _notes = await NotesService.GetAllNoteAsync();
         }
-        catch(Exception e)
+        catch (Exception e)
         {
 
-            await AlertService.AlertAsync("Error" , $"Error in fetching note. Please try again.\nError Messsage: {e.Message}");
+            await AlertService.AlertAsync("Error", $"Error in fetching note. Please try again.\nError Messsage: {e.Message}");
             // throw;
         }
         finally
@@ -182,7 +190,7 @@
 
     private void ToggleLayout(string btnClass)
     {
-        if(mainColClass != btnClass)
+        if (mainColClass != btnClass)
         {
             mainColClass = btnClass;
         }
