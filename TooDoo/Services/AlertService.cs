@@ -14,6 +14,11 @@ public class AlertService : IAlertService
         await _page.DisplayAlert(title , msg , buttonName);
     }
 
+    public async Task<bool> ConfirmAsync(string title , string msg , string okButton = "OK" , string cancelButton = "cancel")
+    {
+        return await _page.DisplayAlert(title , msg , okButton , cancelButton);
+    }
+
     public async Task<string?> PromptAsync(string title , string msg)
     {
         return await _page.DisplayPromptAsync(title , msg);

@@ -61,10 +61,4 @@
     <ProjectReference Include="..\TooDooMBH.RazorCommon\TooDooMBH.RazorCommon.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <MauiXaml Update="Pages\NativeContent.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </MauiXaml>
-  </ItemGroup>
-
 </Project>

@@ -2,25 +2,36 @@
 
 @page "/home"
 
+@inject NavigationManager NavigationManager
+
 @inject NotesService NotesService
 @inject IAlertService AlertService
 @inject IPlatformService PlatformService
 
+<PageTitle>Home</PageTitle>
 
-@if (!PlatformService.IsBrower)
+@if(!PlatformService.IsBrower)
 {
+    @* var userNameTruncated = UserName.Length > 40 ? $"{UserName[0..40]}..."  *@
     <div class="maui-navbar text-white">
         <div class="">
-            <h5 class="m-0">Welcome @UserName</h5>
+            <h5 class="m-0 text-truncate" style="max-width: 300px;">Welcome @UserName</h5>
         </div>
         <NavLink href="/save" Class="left-plus-btn btn btn-default text-white m-0" title="Add">+</NavLink>
     </div>
 }
 
+<NavLink href="/save" class="text-decoration-none fab d-flex justify-content-center align-items-center">
+    <span>+</span>
+    @if(PlatformService.IsBrower)
+    {
+        <small>Add a Note</small>
+    }
+</NavLink>
 
-<div />
+
 <div class="page">
-    <div class="container-fluid">
+    <div class="@(PlatformService.IsBrower ? "container" : "container-fluid")">
         <div class="col-11 mx-auto">
             <div class="mt-3 d-flex text-white justify-content-between align-items-end">
 
@@ -28,16 +39,16 @@
 
                 <div class="filter-btns">
 
-                    @if (!PlatformService.IsBrower)
+                    @if(!PlatformService.IsBrower)
                     {
                         <button type="button" class="btn btn-default" @onclick="@(()=>ToggleLayout("col-6"))">
                             <i class="bx bx-sm bx-grid-alt"
-                                style="@(mainColClass == "col-6"? "color:var(--color-main)" : "color:grey")"></i>
+                               style="@(mainColClass == "col-6"? "color:var(--color-main)" : "color:grey")"></i>
                         </button>
 
                         <button type="button" class="btn btn-default" @onclick="@(()=>ToggleLayout("col-12"))">
                             <i class="bx bx-sm bx-menu"
-                                style="@(mainColClass == "col-12"? "color:var(--color-main)" : "color:grey")"></i>
+                               style="@(mainColClass == "col-12"? "color:var(--color-main)" : "color:grey")"></i>
                         </button>
                     }
                     else
@@ -52,18 +63,18 @@
         <hr class="text-white mb-0" />
     </div>
 
-    @if (_isFetching)
+    @if(_isBusy)
     {
-        <Loading LoadingMessage="Fetching Notes..." />
+        <Loading LoadingMessage="@_busyText" />
     }
     else
     {
-        if (!_notes.Any())
+        if(!_notes.Any())
         {
             <div class="empty-notes-box-wrapper">
                 <NavLink href="/save"
-                    Class="text-center box add-note-btn text-decoration-none d-flex justify-content-center align-items-center flex-column"
-                    title="Add">
+                         Class="text-center box add-note-btn text-decoration-none d-flex justify-content-center align-items-center flex-column"
+                         title="Add">
                     <span class="icon">+</span>
                     <label class="label">Add a note</label>
                 </NavLink>
@@ -73,27 +84,32 @@
         {
             <div class="container-fluid">
                 <div class="row">
-                    @foreach (var note in _notes)
+                    @foreach(var note in _notes)
                     {
                         var editLink = $"/save/{note.Id}";
                         <div class="@mainColClass col-sm-6 col-md-4 col-gap-y">
 
                             <div class="box">
                                 <div>
-                                    <h6 class="m-0 text-truncate">@note.Title</h6>
+                                    <h6 class="m-0 text-truncate" @onclick="()=>ViewNote(note)">@note.Title</h6>
                                     <hr />
                                 </div>
 
                                 <div class="flex-grow-1">
                                     <div class="note-content-wrapper">
-                                        @if (!string.IsNullOrWhiteSpace(note.Content))
+                                        @if(!string.IsNullOrWhiteSpace(note.Content))
                                         {
-                                            <p style="font-size:14px">@note.Content</p>
+                                            var contentTruncate = note.Content.Length > 100 ? $"{note.Content[0..100]}..." : note.Content;
+                                            @if(PlatformService.IsBrower || mainColClass == "col-12")
+                                            {
+                                                contentTruncate = note.Content;
+                                            }
+                                            <p style="font-size:14px;word-wrap: break-word;" @onclick="()=>ViewNote(note)">@contentTruncate</p>
                                         }
                                         else
                                         {
                                             <NavLink href="@editLink"
-                                                class="text-center text-decoration-none d-flex add-note-btn justify-content-center align-items-center  flex-column">
+                                                     class="text-center text-decoration-none d-flex add-note-btn justify-content-center align-items-center flex-column">
                                                 <span class="icon fs-4">+</span>
                                                 <label class="label fs-6">Add content</label>
                                             </NavLink>
@@ -102,19 +118,22 @@
                                 </div>
 
 
+
                                 <div class="actions">
                                     <hr />
                                     <div class="d-flex justify-content-between align-items-center">
                                         <small style="font-size:12px;">
                                             <i class="bx bx-time-five"></i>
-                                            <small>@(note.ModifiedOnTime.HasValue ?
-                                                 note.ModifiedOnTime.Value.ToString(AppConstants.DateTimeFormat) :
-                                                 note.CreatedOnTime.ToString(AppConstants.DateTimeFormat))</small>
+                                            <small>
+                                                @(note.ModifiedOnTime.HasValue ?
+                                                    note.ModifiedOnTime.Value.ToString(AppConstants.DateTimeFormat) :
+                                                    note.CreatedOnTime.ToString(AppConstants.DateTimeFormat))
+                                            </small>
                                         </small>
                                         <div>
-                                            @if (PlatformService.IsBrower)
+                                            @if(PlatformService.IsBrower)
                                             {
-                                                <button type="button" class="btn btn-danger btn-sm">
+                                                <button type="button" class="btn btn-danger btn-sm" @onclick="()=> DeleteNoteAsync(note)">
                                                     <i class="bx bx-trash"></i>
                                                 </button>
                                                 <NavLink href="@editLink" class="btn btn-primary btn-sm">
@@ -123,7 +142,7 @@
                                             }
                                             else
                                             {
-                                                <button type="button" class="btn btn-xs">
+                                                <button type="button" class="btn btn-xs" @onclick="()=>ShowNoteAction(note)">
                                                     <i class="bx bx-xs bx-dots-vertical-rounded"></i>
                                                 </button>
                                             }
@@ -139,8 +158,8 @@
                     }
                     <div class="@mainColClass col-sm-6 col-md-4 col-gap-y">
                         <NavLink href="/save"
-                            Class="text-center box add-note-btn text-decoration-none d-flex justify-content-center align-items-center flex-column"
-                            title="Add">
+                                 Class="text-center box add-note-btn text-decoration-none d-flex justify-content-center align-items-center flex-column"
+                                 title="Add">
                             <span class="icon">+</span>
                             <label class="label">Add a note</label>
                         </NavLink>
@@ -159,40 +178,111 @@
     }
 </div>
 
+@if(_viewingNode is not null)
+{
+    <ViewNoteDetails Note="_viewingNode" OnClose="()=>ViewNote(null)" />
+}
+
+
 @code {
     [CascadingParameter(Name = AppConstants.StorageKeys.Username)]
     public string UserName { get; set; } = string.Empty;
 
-    private bool _isFetching = true;
+    private bool _isBusy = true;
+    private string _busyText = "Fetching Notes...";
     private IEnumerable<Note> _notes = Enumerable.Empty<Note>();
 
     private string mainColClass = "col-6";
 
-    protected override async Task OnInitializedAsync()
+    private Note? _viewingNode = null;
+
+
+    protected override async Task OnInitializedAsync( )
     {
         await base.OnInitializedAsync();
+        await LoadNotesAsync();
+    }
+
+    private async Task LoadNotesAsync( )
+    {
         try
         {
+            _isBusy = true;
+            _busyText = "Fetching Notes...";
             await Task.Delay(500);
             _notes = await NotesService.GetAllNoteAsync();
         }
-        catch (Exception e)
+        catch(Exception e)
         {
 
-            await AlertService.AlertAsync("Error", $"Error in fetching note. Please try again.\nError Messsage: {e.Message}");
+            await AlertService.AlertAsync("Error" , $"Error in fetching note. Please try again.\nError Messsage: {e.Message}");
             // throw;
         }
         finally
         {
-            _isFetching = false;
+            _isBusy = false;
+            _busyText = string.Empty;
         }
     }
 
     private void ToggleLayout(string btnClass)
     {
-        if (mainColClass != btnClass)
+        if(mainColClass != btnClass)
         {
             mainColClass = btnClass;
         }
     }
+
+    private async Task ShowNoteAction(Note note)
+    {
+        if(!PlatformService.IsBrower)
+        {
+            const string DeleteNode = "Delete";
+            const string EditNode = "Edit";
+            var action = await PlatformService.ChooseFromOptionsAsync($"Note Actions for {note.Title}" , DeleteNode , EditNode);
+
+            if(action is not null)
+            {
+                switch(action)
+                {
+                    case DeleteNode:
+                        await DeleteNoteAsync(note);
+
+                        break;
+                    case EditNode:
+                        NavigationManager.NavigateTo($"/save/{note.Id}");
+                        return;
+                }
+            }
+        }
+    }
+
+    private async Task DeleteNoteAsync(Note note)
+    {
+        var userConfirmDelete = await AlertService.ConfirmAsync($"Confirm Delete: {note.Title}" , $"Do you wanna delete this note?" , "Yes" , "No");
+        if(userConfirmDelete)
+        {
+            try
+            {
+                _isBusy = true;
+                _busyText = "Deleting Note...";
+                await NotesService.DeleteNoteAsync(note.Id);
+                StateHasChanged();
+                await LoadNotesAsync();
+            }
+            catch(Exception e)
+            {
+                await AlertService.AlertAsync("Error" , $"Error in deleting note. Please try again.\nError Messsage: {e.Message}");
+            }
+            finally
+            {
+                _isBusy = false;
+                _busyText = string.Empty;
+            }
+        }
+    }
+
+    private void ViewNote(Note note) => _viewingNode = note;
+
+
 }

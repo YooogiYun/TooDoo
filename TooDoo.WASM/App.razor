@@ -4,6 +4,8 @@
 @inject IJSRuntime JsRuntime
 @inject AuthService AuthService
 
+@inject GlobalAppState GlobalAppState
+
 <CascadingValue Name="@AppConstants.StorageKeys.Username" Value="@_name">
     <Router AppAssembly="@typeof(App).Assembly" AdditionalAssemblies="new[]{ typeof(HomePage).Assembly }">
         <Found Context="routeData">
@@ -48,11 +50,14 @@
 
         var name = await AuthService.GetUserName();
 
+        GlobalAppState.IsInitializing = false;
         if(string.IsNullOrWhiteSpace(name))
         {
-            await JsRuntime.InvokeVoidAsync("location.reload");
+            GlobalAppState.ErrorMessage = "Your name is required to use the app.";
+            // await JsRuntime.InvokeVoidAsync("location.reload");
             return;
         }
+
         _name = name;
         NavigationManager.NavigateTo("/home");
 

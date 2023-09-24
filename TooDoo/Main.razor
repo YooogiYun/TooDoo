@@ -3,6 +3,9 @@
 @inject NavigationManager NavigationManager
 @inject AuthService AuthService
 
+@inject GlobalAppState GlobalAppState
+
+
 <BootstrapBlazorRoot>
     <CascadingValue Name="@AppConstants.StorageKeys.Username" Value="@_name">
         <Router AppAssembly="@typeof(Main).Assembly" AdditionalAssemblies="new[]{ typeof(HomePage).Assembly }">
@@ -52,9 +55,11 @@
 
         var name = await AuthService.GetUserName();
 
+        GlobalAppState.IsInitializing = false;
         if(string.IsNullOrWhiteSpace(name))
         {
-            App.Current.Quit();
+            GlobalAppState.ErrorMessage = "Your name is required to use the app.";
+            // App.Current.Quit();
             return;
         }
         _name = name;

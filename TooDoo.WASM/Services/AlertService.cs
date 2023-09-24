@@ -17,6 +17,11 @@ public class AlertService : IAlertService
         await this._jsRuntime.InvokeVoidAsync(JSRuntimeFuncs.alertFunc , $"{title}\n{msg}");
     }
 
+    public async Task<bool> ConfirmAsync(string title , string msg , string okButton = "OK" , string cancelButton = "cancel")
+    {
+        return await this._jsRuntime.InvokeAsync<bool>(JSRuntimeFuncs.confirmFunc , $"{title}\n{msg}");
+    }
+
     public async Task<string?> PromptAsync(string title , string msg)
     {
         return await this._jsRuntime.InvokeAsync<string?>(JSRuntimeFuncs.promptFunc , $"{title}\n{msg}");

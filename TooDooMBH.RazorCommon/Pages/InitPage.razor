@@ -1,0 +1,48 @@
+﻿@* Razor Component *@
+@page "/"
+
+@implements IDisposable
+
+@inject GlobalAppState GlobalAppState
+@inject IPlatformService PlatformService
+
+
+<PageTitle>Index</PageTitle>
+
+@if(GlobalAppState.IsInitializing)
+{
+    var checkingMessage = PlatformService.IsBrower
+                        ? "Blazor        WASM >>> Checking auth state....."
+                        : "Maui Blazor Hybird >>> Checking auth state....";
+
+    <div class="mx-auto my-aut0">
+        <span>@checkingMessage</span>
+    </div>
+}
+else if(!string.IsNullOrWhiteSpace(GlobalAppState.ErrorMessage))
+{
+    <h3 class="text-danger">Error: @GlobalAppState.ErrorMessage</h3>
+}
+else
+{
+    <p>Redirecting to Home page...</p>
+}
+
+
+
+
+@code {
+    protected override void OnInitialized( )
+    {
+        base.OnInitialized();
+        GlobalAppState.PropertyChanged -= OnAppStateChanged;
+        GlobalAppState.PropertyChanged += OnAppStateChanged;
+    }
+
+    private void OnAppStateChanged(object? sender , PropertyChangedEventArgs e)
+    {
+        StateHasChanged();
+    }
+
+    public void Dispose( ) => GlobalAppState.PropertyChanged -= OnAppStateChanged;
+}

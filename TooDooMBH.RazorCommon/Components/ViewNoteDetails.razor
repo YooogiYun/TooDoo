@@ -1,0 +1,77 @@
+﻿@* Razor Component *@
+
+
+@inject IPlatformService PlatformService
+
+
+<div class="detail-fullscreen d-flex justify-content-center align-items-center">
+
+    <div class="bg-main detail-fullscreen opacity-50"></div>
+
+    <div class="mx-auto my-auto box n-model">
+
+        <button type="button" class="btn btn-xs btn-danger align-self-end" @onclick="OnClose">
+            <i class="bx bx-x"></i>
+        </button>
+
+        <p class="fs-5">@Note.Title</p>
+
+        @if(!string.IsNullOrWhiteSpace(Note.Content))
+        {
+            <p class="fs-6" style="word-wrap: break-word;">@Note.Content</p>
+        }
+
+        <hr />
+
+        <div class="d-flex justify-content-around">
+
+            <button type="button" class="btn btn-xs d-flex flex-column" @onclick="CopyToClipboardAsync">
+                <i class="bx bx-copy bx-xs">
+                    <span>Copy</span>
+                </i>
+            </button>
+
+            @if(!PlatformService.IsBrower)
+            {
+                <button type="button" class="btn btn-xs d-flex flex-column" @onclick="ShareAsync">
+                    <i class="bx bx-copy bx-xs">
+                        <span>Share</span>
+                    </i>
+                </button>
+            }
+
+        </div>
+    </div>
+
+</div>
+
+<style type="text/css">
+    .n-model {
+        opacity:0.6 inherit;
+        min-height: 250px;
+        max-width:80%;
+        word-wrap: break-word;
+    }
+</style>
+
+
+@code {
+    [Parameter, EditorRequired]
+    public Note Note { get; set; }
+
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+    private async Task CopyToClipboardAsync( )
+    {
+        await PlatformService.CopyToClipboardAsync($"{Note.Title}\n{Note.Content}");
+    }    
+
+    private async Task ShareAsync( )
+    {
+        if(!PlatformService.IsBrower)
+        {
+            await PlatformService.ShareAsync($"{Note.Title}\n{Note.Content}");
+        }
+    }
+}

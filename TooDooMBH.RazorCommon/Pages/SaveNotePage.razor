@@ -9,6 +9,8 @@
 @inject IAlertService AlertService
 @inject IPlatformService PlatformService
 
+<PageTitle>Save Note</PageTitle>
+
 <EditForm Model="@_note" OnValidSubmit="SaveNoteAsync">
     <DataAnnotationsValidator />
 
@@ -86,7 +88,7 @@
 
                             <div class="mb-3">
                                 <div class="form-floating">
-                                    <InputText @bind-Value="_note.Content"
+                                    <InputTextArea  @bind-Value="_note.Content"
                                                class="@contentClassList"
                                                row="5"
                                                style="@contentStyle"
@@ -95,6 +97,7 @@
                                 </div>
                                 <small class="d-block text-danger">
                                     <ValidationMessage For="()=>_note.Title" />
+                                    <ValidationMessage For="()=>_note.Content" />
                                 </small>
                             </div>
 
